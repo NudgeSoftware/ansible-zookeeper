@@ -1,14 +1,40 @@
-tickTime={{ tick_time }}
-dataDir={{ data_dir }}
-dataLogDir={{ log_dir }}
+# see http://zookeeper.apache.org/doc/trunk/zookeeperAdmin.html#sc_configuration for full details
+# Minimum Configuration
 clientPort={{ client_port }}
-initLimit={{ init_limit }}
-syncLimit={{ sync_limit }}
-
-{% if zookeeper_autopurge_purgeInterval > 0 %}
-autopurge.purgeInterval={{ zookeeper_autopurge_purgeInterval }}
-autopurge.snapRetainCount={{ zookeeper_autopurge_snapRetainCount }}
+{% if secure_client_port is defined %}
+secureClientPort={{ secure_client_port }}
 {% endif %}
+dataDir={{ data_dir }}
+tickTime={{ tick_time }}
+
+# Advanced Configuration
+dataLogDir={{ log_dir }}
+{% if globalOutstandingLimit != 1000 -%} globalOutstandingLimit={{ globalOutstandingLimit }} {%- endif %}
+{% if preAllocSize != '64M' -%}          preAllocSize={{ preAllocSize }} {%- endif %}
+{% if snapCount != 10000 -%}             snapCount={{ snapCount }} {%- endif %}
+{% if maxClientCnxns != 60 -%}           maxClientCnxns={{ maxClientCnxns }} {%- endif %}
+{% if zookeeper_version | version_compare('3.3.0', '>=') %}
+{% if clientPortAddress is defined -%}   clientPortAddress={{ clientPortAddress }} {%- endif %}
+{% if minSessionTimeout is defined -%}   minSessionTimeout={{ minSessionTimeout }} {%- endif %}
+{% if maxSessionTimeout is defined -%}   maxSessionTimeout={{ maxSessionTimeout }} {%- endif %}
+
+{% if zookeeper_version | version_compare('3.3.4', '>=') %}
+{% if fsync_warningthresholdms != 1000 -%} fsync.warningthresholdms={{ fsync_warningthresholdms }} {%- endif %}
+
+{% if zookeeper_version | version_compare('3.4.0', '>=') %}
+{% if zookeeper_autopurge_purgeInterval > 0 -%}    autopurge.purgeInterval={{ zookeeper_autopurge_purgeInterval }} {%- endif %}
+{% if zookeeper_autopurge_snapRetainCount > 3 -%}  autopurge.snapRetainCount={{ zookeeper_autopurge_snapRetainCount }} {%- endif %}
+
+{% if zookeeper_version | version_compare('3.4.6', '>=') %}
+{% if not syncEnabled -%}                syncEnabled="false" {%- endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+
+# Cluster Options
+initLimit={{ init_limit }}
+{% if not leaderServes -%}               leaderServes="no" {%- endif %}
 
 {% for server in zookeeper_hosts %}
 {% if server.host is defined %}
@@ -21,3 +47,27 @@ server.{{server.id}}={{server.host}}:2888:3888
 server.{{loop.index}}={{server}}:2888:3888
 {% endif %}
 {% endfor %}
+
+syncLimit={{ sync_limit }}
+{% if cnxTimeout != 5 -%}                cnxTimeout={{ cnxTimeout }} {%- endif %}
+{% if zookeeper_version | version_compare('3.5.0', '>=') %}
+{% if not standaloneEnabled -%}          standaloneEnabled=true {%- endif %}
+{% endif %}
+
+# Encryption, Authentication, Authorization Options
+{% if zookeeper_version | version_compare('3.2.0', '>=') %}
+{% if DigestAuthenticationProvider_superDigest -%} DigestAuthenticationProvider.superDigest=enabled {%- endif %}
+{% endif %}
+{% if X509AuthenticationProvider_superUser is defined -%}
+X509AuthenticationProvider.superUser={{ X509AuthenticationProvider_superUser }}
+{%- endif %}
+{% if ssl is defined %}
+{% if ssl.keyStore is defined %}
+ssl.keyStore.location={{ ssl.keyStore.location }}
+ssl.keyStore.password={{ ssl.keyStore.password }}
+{% endif %}
+{% if ssl.trustStore is defined %}
+ssl.trustStore.location={{ ssl.trustStore.location }}
+ssl.trustStore.password={{ ssl.trustStore.password }}
+{% endif %}
+{% endif %}

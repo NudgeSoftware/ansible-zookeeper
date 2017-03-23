@@ -12,30 +12,60 @@ zookeeper_debian_apt_repositories: []
 apt_cache_timeout: 3600
 zookeeper_register_path_env: false
 
-client_port: 2181
-init_limit: 5
-sync_limit: 2
-tick_time: 2000
-zookeeper_autopurge_purgeInterval: 0
-zookeeper_autopurge_snapRetainCount: 10
-
-data_dir: /var/lib/zookeeper
-log_dir: /var/log/zookeeper
 zookeeper_dir: "{{ zookeeper_debian_apt_install | ternary('/usr/share/zookeeper', '/opt/zookeeper-' + zookeeper_version) }}"
 zookeeper_conf_dir: "{{ zookeeper_debian_apt_install | ternary('/etc/zookeeper', zookeeper_dir) }}"
 zookeeper_tarball_dir: /opt/src
-
-# Rolling file appender setttings
-zookeeper_rolling_log_file_max_size: 10MB
-zookeeper_max_rolling_log_file_count: 10
-
-# List of dict (i.e. {zookeeper_hosts:[{host:,id:},{host:,id:},...]})
-zookeeper_hosts:
-  - host: "{{inventory_hostname}}" # the machine running
-    id: 1
 
 # Dict of ENV settings to be written into the (optional) conf/zookeeper-env.sh
 zookeeper_env: {}
 
 # Controls Zookeeper myid generation
 zookeeper_force_myid: yes
+
+# Zookeeper Minimum Configuration
+client_port: 2181
+# secure_client_port
+data_dir: /var/lib/zookeeper
+tick_time: 2000
+
+# Zookeeper Advanced Configuration
+log_dir: /var/log/zookeeper
+globalOutstandingLimit: 1000
+preAllocSize: 64M
+snapCount: 10000
+maxClientCnxns: 60
+# clientPortAddress
+# minSessionTimeout # default is 2 * tick_time
+# maxSessionTimeout # default is 20 * tick_time
+fsync_warningthresholdms: 1000
+zookeeper_autopurge_snapRetainCount: 10
+zookeeper_autopurge_purgeInterval: 0
+syncEnabled: yes
+
+# Zookeeper Cluster Configuration
+init_limit: 5
+leaderServes: yes
+# List of dict (i.e. {zookeeper_hosts:[{host:,id:},{host:,id:},...]})
+zookeeper_hosts:
+  - host: "{{inventory_hostname}}" # the machine running
+    id: 1
+sync_limit: 2
+cnxTimeout: 5
+standaloneEnabled: yes
+
+# Zookeeper Encryption, Authentication, Authorization Options
+DigestAuthenticationProvider_superDigest: no
+# X509AuthenticationProvider_superUser: # X500 principal name
+# ssl:
+#   keyStore:
+#     location: # path to a JKS containing the local credentials
+#     password: # password
+#   trustStore:
+#     location: # path to a JKS containing the remote credentials
+#     password: # password
+
+# Log Configuration
+# Rolling file appender setttings
+zookeeper_rolling_log_file_max_size: 10MB
+zookeeper_max_rolling_log_file_count: 10
+
