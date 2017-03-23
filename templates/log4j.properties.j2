@@ -46,7 +46,7 @@ log4j.appender.SYSLOG.threshold=${zookeeper.syslog.threshold}
 log4j.appender.SYSLOG.syslogHost=${zookeeper.syslog.host}
 log4j.appender.SYSLOG.facility=${zookeeper.syslog.facility}
 log4j.appender.SYSLOG.layout=org.apache.log4j.PatternLayout
-log4j.appender.SYSLOG.layout.conversionPattern=[%p] %c:%L - %m%n
+log4j.appender.SYSLOG.layout.conversionPattern={{ log4j_syslog_pattern }}
 
 #
 # Add TRACEFILE to rootLogger to get log file output

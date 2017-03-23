@@ -74,6 +74,7 @@ zookeeper_syslog_app: zk
 zookeeper_syslog_threshold: WARN
 zookeeper_syslog_host: localhost
 zookeeper_syslog_facility: USER
+log4j_syslog_pattern: "[%p] %c:%L - %m%n"
 log4j_pattern: "%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L] - %m%n"
 log4j_trace_pattern: "%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L][%x] - %m%n"
 
