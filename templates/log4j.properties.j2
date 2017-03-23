@@ -1,58 +1,61 @@
 # Define some default values that can be overridden by system properties
-zookeeper.root.logger=INFO, CONSOLE, ROLLINGFILE
-zookeeper.console.threshold=INFO
+zookeeper.root.logger={{ zookeeper_root_logger }}
+
+zookeeper.console.threshold={{ zookeeper_console_threshold }}
+
 zookeeper.log.dir=.
 zookeeper.log.file=zookeeper.log
-zookeeper.log.threshold=DEBUG
-zookeeper.tracelog.dir=.
+zookeeper.log.threshold={{ zookeeper_log_threshold }}
+zookeeper.log.maxfilesize={{ zookeeper_log_maxfilesize }}
+zookeeper.log.maxbackupindex={{ zookeeper_log_maxbackupindex }}
+
+zookeeper.syslog.app={{ zookeeper_syslog_app }}
+zookeeper.syslog.threshold={{ zookeeper_syslog_threshold }}
+zookeeper.syslog.host={{ zookeeper_syslog_host }}
+zookeeper.syslog.facility={{ zookeeper_syslog_facility }}
+
+zookeeper.tracelog.dir=${zookeeper.log.dir}
 zookeeper.tracelog.file=zookeeper_trace.log
 
-#
-# ZooKeeper Logging Configuration
-#
-
-# Format is "<default threshold> (, <appender>)+
-
-# DEFAULT: console appender only
 log4j.rootLogger=${zookeeper.root.logger}
 
-# Example with rolling log file
-#log4j.rootLogger=DEBUG, CONSOLE, ROLLINGFILE
-
-# Example with rolling log file and tracing
-#log4j.rootLogger=TRACE, CONSOLE, ROLLINGFILE, TRACEFILE
-
 #
-# Log INFO level and above messages to the console
+# console
+# Add "console" to rootlogger above if you want to use this 
 #
 log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
 log4j.appender.CONSOLE.Threshold=${zookeeper.console.threshold}
 log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
-log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L] - %m%n
+log4j.appender.CONSOLE.layout.ConversionPattern={{ log4j_pattern }}
 
 #
 # Add ROLLINGFILE to rootLogger to get log file output
-#    Log DEBUG level and above messages to a log file
+#
 log4j.appender.ROLLINGFILE=org.apache.log4j.RollingFileAppender
 log4j.appender.ROLLINGFILE.Threshold=${zookeeper.log.threshold}
 log4j.appender.ROLLINGFILE.File=${zookeeper.log.dir}/${zookeeper.log.file}
-
-# Max log file size of 10MB
-log4j.appender.ROLLINGFILE.MaxFileSize={{ zookeeper_rolling_log_file_max_size }}
-# uncomment the next line to limit number of backup files
-log4j.appender.ROLLINGFILE.MaxBackupIndex={{ zookeeper_max_rolling_log_file_count }}
-
+log4j.appender.ROLLINGFILE.MaxFileSize=${zookeeper.log.maxfilesize}
+log4j.appender.ROLLINGFILE.MaxBackupIndex=${zookeeper.log.maxbackupindex}
 log4j.appender.ROLLINGFILE.layout=org.apache.log4j.PatternLayout
-log4j.appender.ROLLINGFILE.layout.ConversionPattern=%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L] - %m%n
+log4j.appender.ROLLINGFILE.layout.ConversionPattern={{ log4j_pattern }}
 
+# configure Syslog facility LOCAL1 appender
+log4j.appender.SYSLOG=org.apache.log4j.net.SyslogAppender
+log4j.appender.SYSLOG.appName=${zookeeper.syslog.app}
+log4j.appender.SYSLOG.threshold=${zookeeper.syslog.threshold}
+log4j.appender.SYSLOG.syslogHost=${zookeeper.syslog.host}
+log4j.appender.SYSLOG.facility=${zookeeper.syslog.facility}
+log4j.appender.SYSLOG.layout=org.apache.log4j.PatternLayout
+log4j.appender.SYSLOG.layout.conversionPattern=[%p] %c:%L - %m%n
 
 #
 # Add TRACEFILE to rootLogger to get log file output
-#    Log DEBUG level and above messages to a log file
+#    Log TRACE level and above messages to a log file
+#
 log4j.appender.TRACEFILE=org.apache.log4j.FileAppender
 log4j.appender.TRACEFILE.Threshold=TRACE
 log4j.appender.TRACEFILE.File=${zookeeper.tracelog.dir}/${zookeeper.tracelog.file}
 
 log4j.appender.TRACEFILE.layout=org.apache.log4j.PatternLayout
 ### Notice we are including log4j's NDC here (%x)
-log4j.appender.TRACEFILE.layout.ConversionPattern=%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L][%x] - %m%n
+log4j.appender.TRACEFILE.layout.ConversionPattern={{ log4j_trace_pattern }}

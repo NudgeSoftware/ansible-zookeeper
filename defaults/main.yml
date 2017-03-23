@@ -65,7 +65,15 @@ DigestAuthenticationProvider_superDigest: no
 #     password: # password
 
 # Log Configuration
-# Rolling file appender setttings
-zookeeper_rolling_log_file_max_size: 10MB
-zookeeper_max_rolling_log_file_count: 10
+zookeeper_root_logger: INFO, CONSOLE, ROLLINGFILE
+zookeeper_console_threshold: INFO
+zookeeper_log_threshold: INFO
+zookeeper_log_maxfilesize: 10MB
+zookeeper_log_maxbackupindex: 10
+zookeeper_syslog_app: zk
+zookeeper_syslog_threshold: WARN
+zookeeper_syslog_host: localhost
+zookeeper_syslog_facility: USER
+log4j_pattern: "%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L] - %m%n"
+log4j_trace_pattern: "%d{ISO8601} [myid:%X{myid}] - %-5p [%t:%C{1}@%L][%x] - %m%n"
 
