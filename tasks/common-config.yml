@@ -4,7 +4,7 @@
   tags: deploy
   notify:
     - Restart zookeeper
-  when: zookeeper_env is defined and zookeeper_env|length > 0
+  when: zookeeper_env is defined
 
 - name: Update the log4j config with saner production values
   template: src=log4j.properties.j2 dest={{ zookeeper_conf_dir }}/conf/log4j.properties

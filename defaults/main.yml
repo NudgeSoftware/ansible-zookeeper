@@ -16,8 +16,8 @@ zookeeper_dir: "{{ zookeeper_debian_apt_install | ternary('/usr/share/zookeeper'
 zookeeper_conf_dir: "{{ zookeeper_debian_apt_install | ternary('/etc/zookeeper', zookeeper_dir) }}"
 zookeeper_tarball_dir: /opt/src
 
-# Dict of ENV settings to be written into the (optional) conf/zookeeper-env.sh
-zookeeper_env: {}
+# script to be written to the (optional) conf/zookeeper-env.sh
+# zookeeper_env: 
 
 # Controls Zookeeper myid generation
 zookeeper_force_myid: yes

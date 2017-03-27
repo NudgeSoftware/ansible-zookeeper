@@ -66,8 +66,9 @@ zookeeper_hosts:
   - host: "{{inventory_hostname}}" # the machine running
     id: 1
 
-# Dict of ENV settings to be written into the (optional) conf/zookeeper-env.sh
-zookeeper_env: {}
+# script to be written to the (optional) conf/zookeeper-env.sh
+zookeeper_env: |
+  export ZOO_LOG4J_PROP: 'INFO,ROLLINGFILE'
 
 # Controls Zookeeper myid generation
 zookeeper_force_myid: yes
