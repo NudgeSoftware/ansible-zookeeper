@@ -23,7 +23,7 @@
 - name: "Create zookeeper {{item}} directory."
   file: path={{item}} state=directory owner=zookeeper group=zookeeper
   tags: bootstrap
-  with_items:
+  loop:
     - "{{data_dir}}"
     - "{{log_dir}}"
 
