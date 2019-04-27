@@ -1,8 +1,9 @@
 ---
 - name: Install OS Packages
-  yum: name={{ item }} state=present
-  loop:
-    - libselinux-python
+  yum: 
+    name: 
+      - libselinux-python 
+    state: present
 
 - import_tasks: tarball.yml
 
